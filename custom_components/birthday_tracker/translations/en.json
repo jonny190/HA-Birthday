@@ -13,7 +13,55 @@
   "options": {
     "step": {
       "init": {
-        "title": "Birthday Tracker Settings",
+        "title": "Birthday Tracker",
+        "description": "What would you like to do?",
+        "menu_options": {
+          "add_birthday": "Add a birthday",
+          "manage_birthdays": "Manage birthdays",
+          "settings": "Settings"
+        }
+      },
+      "add_birthday": {
+        "title": "Add Birthday",
+        "description": "Add a new birthday to track.",
+        "data": {
+          "name": "Name",
+          "date": "Date (YYYY-MM-DD or MM-DD)",
+          "reminder_days_before": "Reminder days before (comma-separated, e.g. 7,1,0)",
+          "notes": "Notes (optional)"
+        }
+      },
+      "manage_birthdays": {
+        "title": "Manage Birthdays",
+        "description": "Select a birthday to edit or remove.",
+        "data": {
+          "birthday": "Birthday"
+        }
+      },
+      "birthday_action": {
+        "title": "Birthday Action",
+        "description": "What would you like to do with this birthday?",
+        "menu_options": {
+          "edit_birthday": "Edit",
+          "remove_birthday": "Remove"
+        }
+      },
+      "edit_birthday": {
+        "title": "Edit Birthday",
+        "description": "Update the birthday details.",
+        "data": {
+          "name": "Name",
+          "date": "Date (YYYY-MM-DD or MM-DD)",
+          "reminder_days_before": "Reminder days before (comma-separated)",
+          "notes": "Notes"
+        }
+      },
+      "remove_birthday": {
+        "title": "Remove Birthday",
+        "description": "Are you sure you want to remove {name}?"
+      },
+      "settings": {
+        "title": "Settings",
         "description": "Configure global notification settings.",
         "data": {
           "notification_time": "Notification time (HH:MM, 24-hour format)",
@@ -23,7 +71,12 @@
     },
     "error": {
       "invalid_time": "Invalid time format. Use HH:MM (e.g. 12:00).",
-      "invalid_days": "Invalid format. Use comma-separated positive numbers (e.g. 7,1,0)."
+      "invalid_days": "Invalid format. Use comma-separated positive numbers (e.g. 7,1,0).",
+      "invalid_date": "Invalid date format. Use YYYY-MM-DD or MM-DD."
+    },
+    "abort": {
+      "no_birthdays": "No birthdays have been added yet. Use 'Add a birthday' first.",
+      "birthday_not_found": "Birthday not found. It may have already been removed."
     }
   },
   "services": {
