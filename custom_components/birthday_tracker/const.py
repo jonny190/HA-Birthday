@@ -11,6 +11,7 @@ STORAGE_VERSION: Final = 1
 # Config / Options keys
 CONF_NOTIFICATION_TIME: Final = "notification_time"
 CONF_DEFAULT_REMINDER_DAYS: Final = "default_reminder_days"
+CONF_NOTIFY_SERVICES: Final = "notify_services"
 
 # Defaults
 DEFAULT_NOTIFICATION_TIME: Final = "12:00"

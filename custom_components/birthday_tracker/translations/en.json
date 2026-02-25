@@ -62,10 +62,11 @@
       },
       "settings": {
         "title": "Settings",
-        "description": "Configure global notification settings.",
+        "description": "Configure notification settings. Select one or more notify services to receive automatic birthday reminders.",
         "data": {
           "notification_time": "Notification time (HH:MM, 24-hour format)",
-          "default_reminder_days": "Default reminder days before birthday (comma-separated, e.g. 7,1,0)"
+          "default_reminder_days": "Default reminder days before birthday (comma-separated, e.g. 7,1,0)",
+          "notify_services": "Notification services"
         }
       }
     },

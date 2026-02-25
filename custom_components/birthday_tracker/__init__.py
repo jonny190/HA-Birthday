@@ -30,6 +30,7 @@ from .const import (
     ATTR_REMINDER_DAYS,
     CONF_DEFAULT_REMINDER_DAYS,
     CONF_NOTIFICATION_TIME,
+    CONF_NOTIFY_SERVICES,
     DEFAULT_NOTIFICATION_TIME,
     DEFAULT_REMINDER_DAYS,
     DOMAIN,
@@ -297,10 +298,37 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # --- Daily reminder scheduler ---
 
+    def _build_notification_message(
+        name: str, days: int, age: int | None, ordinal: str | None, notes: str
+    ) -> str:
+        """Build a human-friendly notification message."""
+        if days == 0:
+            msg = f"Today is {name}'s birthday!"
+            if ordinal:
+                msg += f" They are turning {ordinal}."
+        elif days == 1:
+            msg = f"{name}'s birthday is tomorrow!"
+            if ordinal:
+                msg += f" They will be turning {ordinal}."
+        else:
+            msg = f"{name}'s birthday is in {days} days."
+            if ordinal:
+                msg += f" They will be turning {ordinal}."
+        if notes:
+            msg += f"\nNotes: {notes}"
+        return msg
+
     @callback
     def _async_check_birthdays(now: datetime) -> None:
-        """Check all birthdays and fire reminder events."""
+        """Check all birthdays and fire reminder events + send notifications."""
         today = now.date()
+
+        # Get configured notify services
+        notify_services_str = entry.options.get(CONF_NOTIFY_SERVICES, "")
+        notify_services = [
+            s.strip() for s in notify_services_str.split(",") if s.strip()
+        ] if notify_services_str else []
+
         for birthday in store.birthdays:
             days = _days_until_birthday(birthday["date"], today)
             reminder_days = birthday.get(
@@ -308,12 +336,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
             if days in reminder_days:
                 age = _age_turning(birthday["date"], today)
+                ordinal = _ordinal(age) if age else None
                 event_data = {
                     ATTR_NAME: birthday["name"],
                     ATTR_DATE: _display_date(birthday["date"]),
                     ATTR_DAYS_UNTIL: days,
                     ATTR_AGE_TURNING: age,
-                    ATTR_AGE_TURNING_ORDINAL: _ordinal(age) if age else None,
+                    ATTR_AGE_TURNING_ORDINAL: ordinal,
                     ATTR_NOTES: birthday.get("notes", ""),
                     ATTR_BIRTHDAY_ID: birthday["id"],
                 }
@@ -324,6 +353,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     days,
                 )
                 hass.bus.async_fire(EVENT_BIRTHDAY_REMINDER, event_data)
+
+                # Send to configured notify services
+                if notify_services:
+                    message = _build_notification_message(
+                        birthday["name"],
+                        days,
+                        age,
+                        ordinal,
+                        birthday.get("notes", ""),
+                    )
+                    title = "Birthday Reminder"
+                    for service_name in notify_services:
+                        hass.async_create_task(
+                            hass.services.async_call(
+                                "notify",
+                                service_name,
+                                {"title": title, "message": message},
+                            )
+                        )
 
     unsub_time_listener = async_track_time_change(
         hass, _async_check_birthdays, hour=hour, minute=minute, second=0

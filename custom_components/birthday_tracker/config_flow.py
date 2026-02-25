@@ -23,6 +23,7 @@ from .const import (
     ATTR_REMINDER_DAYS,
     CONF_DEFAULT_REMINDER_DAYS,
     CONF_NOTIFICATION_TIME,
+    CONF_NOTIFY_SERVICES,
     DEFAULT_NOTIFICATION_TIME,
     DEFAULT_REMINDER_DAYS,
     DOMAIN,
@@ -309,6 +310,19 @@ class BirthdayTrackerOptionsFlow(OptionsFlow):
 
     # ── Settings ─────────────────────────────────────────────────
 
+    def _get_notify_services(self) -> dict[str, str]:
+        """Auto-detect available notify services."""
+        services = self.hass.services.async_services()
+        notify_services: dict[str, str] = {}
+        if "notify" in services:
+            for service_name in sorted(services["notify"]):
+                if service_name == "persistent_notification":
+                    continue
+                # Build a friendly label from the service name
+                label = service_name.replace("_", " ").title()
+                notify_services[service_name] = label
+        return notify_services
+
     async def async_step_settings(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -334,28 +348,61 @@ class BirthdayTrackerOptionsFlow(OptionsFlow):
                 errors[CONF_DEFAULT_REMINDER_DAYS] = "invalid_days"
 
             if not errors:
+                # Convert selected notify services list to comma-separated string
+                selected = user_input.get(CONF_NOTIFY_SERVICES, [])
+                if isinstance(selected, list):
+                    user_input[CONF_NOTIFY_SERVICES] = ",".join(selected)
                 return self.async_create_entry(data=user_input)
 
         options = self.config_entry.options
 
+        # Build notify services multi-select
+        available_services = self._get_notify_services()
+        current_services = options.get(CONF_NOTIFY_SERVICES, "")
+        current_list = [
+            s.strip() for s in current_services.split(",") if s.strip()
+        ] if current_services else []
+
+        schema_dict: dict[Any, Any] = {
+            vol.Required(
+                CONF_NOTIFICATION_TIME,
+                default=options.get(
+                    CONF_NOTIFICATION_TIME, DEFAULT_NOTIFICATION_TIME
+                ),
+            ): str,
+            vol.Required(
+                CONF_DEFAULT_REMINDER_DAYS,
+                default=options.get(
+                    CONF_DEFAULT_REMINDER_DAYS,
+                    ",".join(str(d) for d in DEFAULT_REMINDER_DAYS),
+                ),
+            ): str,
+        }
+
+        if available_services:
+            from homeassistant.helpers.selector import (
+                SelectOptionDict,
+                SelectSelector,
+                SelectSelectorConfig,
+                SelectSelectorMode,
+            )
+
+            notify_options = [
+                SelectOptionDict(value=key, label=label)
+                for key, label in available_services.items()
+            ]
+            schema_dict[
+                vol.Optional(CONF_NOTIFY_SERVICES, default=current_list)
+            ] = SelectSelector(
+                SelectSelectorConfig(
+                    options=notify_options,
+                    multiple=True,
+                    mode=SelectSelectorMode.DROPDOWN,
+                )
+            )
+
         return self.async_show_form(
             step_id="settings",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        CONF_NOTIFICATION_TIME,
-                        default=options.get(
-                            CONF_NOTIFICATION_TIME, DEFAULT_NOTIFICATION_TIME
-                        ),
-                    ): str,
-                    vol.Required(
-                        CONF_DEFAULT_REMINDER_DAYS,
-                        default=options.get(
-                            CONF_DEFAULT_REMINDER_DAYS,
-                            ",".join(str(d) for d in DEFAULT_REMINDER_DAYS),
-                        ),
-                    ): str,
-                }
-            ),
+            data_schema=vol.Schema(schema_dict),
             errors=errors,
         )

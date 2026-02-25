@@ -10,7 +10,8 @@
 
 - **Calendar integration** - Birthdays appear as recurring yearly events in the HA calendar dashboard with age display (e.g. "Alice's Birthday (40th)")
 - **Configurable reminders** - Set how many days before each birthday to get reminded (default: 7, 1, and 0 days before)
-- **Flexible notifications** - Fires `birthday_tracker_reminder` events that you wire up to any notification service via automations
+- **Auto notifications** - Select your notify services (mobile app, Telegram, etc.) in Settings and reminders are sent automatically
+- **Flexible events** - Also fires `birthday_tracker_reminder` events for custom automations
 - **Per-person settings** - Each birthday can have its own reminder schedule
 - **Age tracking** - Automatically calculates and displays the age they're turning (when birth year is provided)
 - **Per-person entities** - Each birthday appears as its own sensor entity showing days until their next birthday
@@ -43,7 +44,7 @@ After setup, click **Configure** on the Birthday Tracker integration card to:
 
 - **Add a birthday** - Add a new person with name, date, reminder days, and notes
 - **Manage birthdays** - Edit or remove existing birthdays
-- **Settings** - Notification time (default: `12:00`) and default reminder days (default: `7,1,0`)
+- **Settings** - Notification time (default: `12:00`), default reminder days (default: `7,1,0`), and notification services to send reminders to
 
 ## Usage
 
