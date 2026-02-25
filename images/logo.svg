@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+  <defs>
+    <linearGradient id="logobg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B9D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C44569;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon circle -->
+  <circle cx="100" cy="100" r="80" fill="url(#logobg)" />
+
+  <!-- Cake base -->
+  <rect x="52" y="108" width="96" height="28" rx="6" ry="6" fill="#FFFFFF" opacity="0.95" />
+
+  <!-- Cake top tier -->
+  <rect x="62" y="82" width="76" height="28" rx="6" ry="6" fill="#FFFFFF" opacity="0.85" />
+
+  <!-- Frosting bottom -->
+  <path d="M52 108 Q60 116 68 108 Q76 116 84 108 Q92 116 100 108 Q108 116 116 108 Q124 116 132 108 Q140 116 148 108" fill="none" stroke="#FFD93D" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Frosting top -->
+  <path d="M62 82 Q70 90 78 82 Q86 90 94 82 Q102 90 110 82 Q118 90 126 82 Q134 90 138 85" fill="none" stroke="#FFD93D" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- Candles -->
+  <rect x="82" y="58" width="6" height="24" rx="2" ry="2" fill="#6C5CE7" />
+  <rect x="97" y="52" width="6" height="30" rx="2" ry="2" fill="#00B894" />
+  <rect x="112" y="58" width="6" height="24" rx="2" ry="2" fill="#FDCB6E" />
+
+  <!-- Flames -->
+  <ellipse cx="85" cy="53" rx="4" ry="6" fill="#FFD93D" />
+  <ellipse cx="85" cy="51.5" rx="2.5" ry="4" fill="#FFF3B0" />
+  <ellipse cx="100" cy="47" rx="4" ry="6" fill="#FFD93D" />
+  <ellipse cx="100" cy="45.5" rx="2.5" ry="4" fill="#FFF3B0" />
+  <ellipse cx="115" cy="53" rx="4" ry="6" fill="#FFD93D" />
+  <ellipse cx="115" cy="51.5" rx="2.5" ry="4" fill="#FFF3B0" />
+
+  <!-- Calendar badge -->
+  <rect x="132" y="118" width="32" height="30" rx="5" ry="5" fill="#FFFFFF" />
+  <rect x="132" y="118" width="32" height="11" rx="5" ry="0" fill="#E17055" />
+  <rect x="132" y="124" width="32" height="5" fill="#E17055" />
+  <text x="148" y="143" font-family="Arial, sans-serif" font-weight="bold" font-size="13" fill="#2D3436" text-anchor="middle">31</text>
+
+  <!-- Text -->
+  <text x="210" y="90" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="42" fill="#2D3436">Birthday</text>
+  <text x="210" y="135" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="42" fill="#C44569">Tracker</text>
+  <text x="212" y="160" font-family="Arial, Helvetica, sans-serif" font-weight="400" font-size="16" fill="#636E72">for Home Assistant</text>
+</svg>

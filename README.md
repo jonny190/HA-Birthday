@@ -1,6 +1,10 @@
-# Birthday Tracker for Home Assistant
+<p align="center">
+  <img src="images/logo.png" alt="Birthday Tracker for Home Assistant" width="480">
+</p>
 
-A custom Home Assistant integration that tracks friends' and family birthdays, displays them on the HA calendar, and fires configurable reminder events for your automations.
+<p align="center">
+  A custom Home Assistant integration that tracks friends' and family birthdays, displays them on the HA calendar, and fires configurable reminder events for your automations.
+</p>
 
 ## Features
 
