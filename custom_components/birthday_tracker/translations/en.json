@@ -1,0 +1,93 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Birthday Tracker",
+        "description": "Track friends' and family birthdays, display them on a calendar, and get configurable reminder events for your automations.\n\nClick Submit to set up."
+      }
+    },
+    "abort": {
+      "already_configured": "Birthday Tracker is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Birthday Tracker Settings",
+        "description": "Configure global notification settings.",
+        "data": {
+          "notification_time": "Notification time (HH:MM, 24-hour format)",
+          "default_reminder_days": "Default reminder days before birthday (comma-separated, e.g. 7,1,0)"
+        }
+      }
+    },
+    "error": {
+      "invalid_time": "Invalid time format. Use HH:MM (e.g. 12:00).",
+      "invalid_days": "Invalid format. Use comma-separated positive numbers (e.g. 7,1,0)."
+    }
+  },
+  "services": {
+    "add_birthday": {
+      "name": "Add Birthday",
+      "description": "Add a new birthday to track.",
+      "fields": {
+        "name": {
+          "name": "Name",
+          "description": "The person's full name."
+        },
+        "date": {
+          "name": "Date",
+          "description": "Birthday date in YYYY-MM-DD format (or MM-DD if birth year is unknown)."
+        },
+        "reminder_days_before": {
+          "name": "Reminder Days Before",
+          "description": "Comma-separated days before birthday to send reminders (e.g. 7,1,0). Uses global default if omitted."
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Optional notes such as gift ideas."
+        }
+      }
+    },
+    "remove_birthday": {
+      "name": "Remove Birthday",
+      "description": "Remove a tracked birthday by its ID.",
+      "fields": {
+        "id": {
+          "name": "Birthday ID",
+          "description": "The unique ID of the birthday to remove. Use the list_birthdays service to find IDs."
+        }
+      }
+    },
+    "edit_birthday": {
+      "name": "Edit Birthday",
+      "description": "Edit an existing tracked birthday. Only provided fields will be updated.",
+      "fields": {
+        "id": {
+          "name": "Birthday ID",
+          "description": "The unique ID of the birthday to edit."
+        },
+        "name": {
+          "name": "Name",
+          "description": "Updated name."
+        },
+        "date": {
+          "name": "Date",
+          "description": "Updated birthday date (YYYY-MM-DD or MM-DD)."
+        },
+        "reminder_days_before": {
+          "name": "Reminder Days Before",
+          "description": "Updated comma-separated reminder days."
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Updated notes."
+        }
+      }
+    },
+    "list_birthdays": {
+      "name": "List Birthdays",
+      "description": "List all tracked birthdays sorted by days until next occurrence. Returns response data with age and countdown information."
+    }
+  }
+}

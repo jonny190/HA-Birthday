@@ -1,0 +1,60 @@
+add_birthday:
+  fields:
+    name:
+      required: true
+      example: "Alice Smith"
+      selector:
+        text:
+    date:
+      required: true
+      example: "1990-03-15"
+      selector:
+        text:
+    reminder_days_before:
+      required: false
+      example: "7,1,0"
+      selector:
+        text:
+    notes:
+      required: false
+      example: "Likes chocolate cake"
+      selector:
+        text:
+
+remove_birthday:
+  fields:
+    id:
+      required: true
+      example: "a1b2c3d4"
+      selector:
+        text:
+
+edit_birthday:
+  fields:
+    id:
+      required: true
+      example: "a1b2c3d4"
+      selector:
+        text:
+    name:
+      required: false
+      example: "Alice Johnson"
+      selector:
+        text:
+    date:
+      required: false
+      example: "1990-04-20"
+      selector:
+        text:
+    reminder_days_before:
+      required: false
+      example: "7,1,0"
+      selector:
+        text:
+    notes:
+      required: false
+      example: "Now prefers vanilla"
+      selector:
+        text:
+
+list_birthdays:

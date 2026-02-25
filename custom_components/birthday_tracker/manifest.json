@@ -1,0 +1,12 @@
+{
+  "domain": "birthday_tracker",
+  "name": "Birthday Tracker",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/your-username/HA-Birthday",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/your-username/HA-Birthday/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
