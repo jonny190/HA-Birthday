@@ -89,25 +89,34 @@ def _parse_reminder_days(value: str) -> list[int]:
 
 
 def _normalize_date(date_str: str) -> str:
-    """Normalize date input to YYYY-MM-DD format.
+    """Normalize date input to YYYY-MM-DD internal format.
 
     Accepts:
-      - "YYYY-MM-DD" -> stored as-is
-      - "MM-DD"      -> stored as "0000-MM-DD" (no birth year)
+      - "DD-MM-YYYY" -> stored as "YYYY-MM-DD"
+      - "DD-MM"      -> stored as "0000-MM-DD" (no birth year)
     """
     parts = date_str.strip().split("-")
     if len(parts) == 2:
-        month, day = int(parts[0]), int(parts[1])
+        day, month = int(parts[0]), int(parts[1])
         date(2000, month, day)  # Validate with a leap year
         return f"0000-{month:02d}-{day:02d}"
     if len(parts) == 3:
-        year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
+        day, month, year = int(parts[0]), int(parts[1]), int(parts[2])
         if year != 0:
             date(year, month, day)
         else:
             date(2000, month, day)
         return f"{year:04d}-{month:02d}-{day:02d}"
-    raise vol.Invalid(f"Invalid date format: {date_str}. Use YYYY-MM-DD or MM-DD.")
+    raise vol.Invalid(f"Invalid date format: {date_str}. Use DD-MM-YYYY or DD-MM.")
+
+
+def _display_date(stored_date: str) -> str:
+    """Convert internal YYYY-MM-DD to display format DD-MM-YYYY or DD-MM."""
+    parts = stored_date.split("-")
+    year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
+    if year == 0:
+        return f"{day:02d}-{month:02d}"
+    return f"{day:02d}-{month:02d}-{year:04d}"
 
 
 def _days_until_birthday(birthday_date_str: str, today: date) -> int:
@@ -200,7 +209,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return {
             "id": birthday["id"],
             "name": birthday["name"],
-            "date": birthday["date"],
+            "date": _display_date(birthday["date"]),
         }
 
     async def handle_remove_birthday(call: ServiceCall) -> ServiceResponse:
@@ -246,7 +255,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 {
                     "id": b["id"],
                     "name": b["name"],
-                    "date": b["date"],
+                    "date": _display_date(b["date"]),
                     "days_until": _days_until_birthday(b["date"], today),
                     "age_turning": age,
                     "age_turning_ordinal": _ordinal(age) if age else None,
@@ -301,7 +310,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 age = _age_turning(birthday["date"], today)
                 event_data = {
                     ATTR_NAME: birthday["name"],
-                    ATTR_DATE: birthday["date"],
+                    ATTR_DATE: _display_date(birthday["date"]),
                     ATTR_DAYS_UNTIL: days,
                     ATTR_AGE_TURNING: age,
                     ATTR_AGE_TURNING_ORDINAL: _ordinal(age) if age else None,

@@ -68,20 +68,32 @@ class BirthdayTrackerConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 def _normalize_date(date_str: str) -> str:
-    """Normalize date input to YYYY-MM-DD format."""
+    """Normalize date input to YYYY-MM-DD internal format.
+
+    Accepts DD-MM-YYYY or DD-MM.
+    """
     parts = date_str.strip().split("-")
     if len(parts) == 2:
-        month, day = int(parts[0]), int(parts[1])
+        day, month = int(parts[0]), int(parts[1])
         date(2000, month, day)
         return f"0000-{month:02d}-{day:02d}"
     if len(parts) == 3:
-        year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
+        day, month, year = int(parts[0]), int(parts[1]), int(parts[2])
         if year != 0:
             date(year, month, day)
         else:
             date(2000, month, day)
         return f"{year:04d}-{month:02d}-{day:02d}"
-    raise vol.Invalid(f"Invalid date format: {date_str}. Use YYYY-MM-DD or MM-DD.")
+    raise vol.Invalid(f"Invalid date format: {date_str}. Use DD-MM-YYYY or DD-MM.")
+
+
+def _display_date(stored_date: str) -> str:
+    """Convert internal YYYY-MM-DD to display format DD-MM-YYYY or DD-MM."""
+    parts = stored_date.split("-")
+    year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
+    if year == 0:
+        return f"{day:02d}-{month:02d}"
+    return f"{day:02d}-{month:02d}-{year:04d}"
 
 
 def _parse_reminder_days(value: str) -> list[int]:
@@ -189,9 +201,9 @@ class BirthdayTrackerOptionsFlow(OptionsFlow):
             self._selected_birthday_id = user_input["birthday"]
             return await self.async_step_birthday_action()
 
-        # Build selection list: "Name (YYYY-MM-DD)"
+        # Build selection list: "Name (DD-MM-YYYY)"
         birthday_options = {
-            b["id"]: f"{b['name']} ({b['date']})" for b in birthdays
+            b["id"]: f"{b['name']} ({_display_date(b['date'])})" for b in birthdays
         }
 
         return self.async_show_form(
@@ -261,7 +273,7 @@ class BirthdayTrackerOptionsFlow(OptionsFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required(ATTR_NAME, default=birthday["name"]): str,
-                    vol.Required(ATTR_DATE, default=birthday["date"]): str,
+                    vol.Required(ATTR_DATE, default=_display_date(birthday["date"])): str,
                     vol.Required(
                         ATTR_REMINDER_DAYS, default=reminder_str
                     ): str,

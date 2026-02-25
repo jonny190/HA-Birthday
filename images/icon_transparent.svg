@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Cake base - bottom tier -->
+  <rect x="28" y="148" width="200" height="52" rx="12" ry="12" fill="#FF6B9D" />
+
+  <!-- Cake top tier -->
+  <rect x="52" y="100" width="152" height="52" rx="12" ry="12" fill="#FF85B1" />
+
+  <!-- Frosting bottom tier -->
+  <path d="M28 148 Q44 164 60 148 Q76 164 92 148 Q108 164 124 148 Q140 164 156 148 Q172 164 188 148 Q204 164 220 148 Q228 156 228 148" fill="none" stroke="#FFD93D" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Frosting top tier -->
+  <path d="M52 100 Q68 116 84 100 Q100 116 116 100 Q132 116 148 100 Q164 116 180 100 Q196 116 204 104" fill="none" stroke="#FFD93D" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Candle left -->
+  <rect x="90" y="56" width="12" height="44" rx="4" ry="4" fill="#6C5CE7" />
+  <!-- Candle center -->
+  <rect x="122" y="44" width="12" height="56" rx="4" ry="4" fill="#00B894" />
+  <!-- Candle right -->
+  <rect x="154" y="56" width="12" height="44" rx="4" ry="4" fill="#FDCB6E" />
+
+  <!-- Flames -->
+  <ellipse cx="96" cy="48" rx="7" ry="11" fill="#FFD93D" />
+  <ellipse cx="96" cy="45" rx="4" ry="7" fill="#FFF3B0" />
+
+  <ellipse cx="128" cy="36" rx="7" ry="11" fill="#FFD93D" />
+  <ellipse cx="128" cy="33" rx="4" ry="7" fill="#FFF3B0" />
+
+  <ellipse cx="160" cy="48" rx="7" ry="11" fill="#FFD93D" />
+  <ellipse cx="160" cy="45" rx="4" ry="7" fill="#FFF3B0" />
+
+  <!-- Decorative dots on bottom tier -->
+  <circle cx="68" cy="172" r="5" fill="#FFFFFF" opacity="0.6" />
+  <circle cx="108" cy="172" r="5" fill="#FFFFFF" opacity="0.6" />
+  <circle cx="148" cy="172" r="5" fill="#FFFFFF" opacity="0.6" />
+  <circle cx="188" cy="172" r="5" fill="#FFFFFF" opacity="0.6" />
+
+  <!-- Calendar badge -->
+  <rect x="176" y="180" width="56" height="50" rx="8" ry="8" fill="#FFFFFF" />
+  <rect x="176" y="180" width="56" height="18" rx="8" ry="0" fill="#E17055" />
+  <rect x="176" y="190" width="56" height="8" fill="#E17055" />
+  <text x="204" y="222" font-family="Arial, sans-serif" font-weight="bold" font-size="22" fill="#2D3436" text-anchor="middle">31</text>
+</svg>

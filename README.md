@@ -13,6 +13,7 @@
 - **Flexible notifications** - Fires `birthday_tracker_reminder` events that you wire up to any notification service via automations
 - **Per-person settings** - Each birthday can have its own reminder schedule
 - **Age tracking** - Automatically calculates and displays the age they're turning (when birth year is provided)
+- **Per-person entities** - Each birthday appears as its own sensor entity showing days until their next birthday
 - **Midday notifications** - Reminders fire at 12:00 by default, configurable in integration options
 
 ## Installation
@@ -38,34 +39,37 @@
 
 ### Options
 
-After setup, click **Configure** on the Birthday Tracker integration card to adjust:
+After setup, click **Configure** on the Birthday Tracker integration card to:
 
-- **Notification time** - When daily reminder checks run (default: `12:00`, 24-hour format)
-- **Default reminder days** - Comma-separated days before birthday to remind (default: `7,1,0`)
+- **Add a birthday** - Add a new person with name, date, reminder days, and notes
+- **Manage birthdays** - Edit or remove existing birthdays
+- **Settings** - Notification time (default: `12:00`) and default reminder days (default: `7,1,0`)
 
 ## Usage
 
 ### Adding Birthdays
 
-Use the **Developer Tools > Services** panel or call from automations/scripts:
+You can add birthdays via the **Configure** button on the integration card, or via services:
 
 ```yaml
 service: birthday_tracker.add_birthday
 data:
   name: "Alice Smith"
-  date: "1990-03-15"          # YYYY-MM-DD (with birth year for age tracking)
+  date: "15-03-1990"          # DD-MM-YYYY (with birth year for age tracking)
   notes: "Likes chocolate cake"
   reminder_days_before: "7,1,0"  # Optional, uses global default if omitted
 ```
 
-If you don't know the birth year, use `MM-DD` format:
+If you don't know the birth year, use `DD-MM` format:
 
 ```yaml
 service: birthday_tracker.add_birthday
 data:
   name: "Bob Jones"
-  date: "03-15"               # MM-DD (no age tracking)
+  date: "15-03"               # DD-MM (no age tracking)
 ```
+
+Each birthday creates a sensor entity (e.g. `sensor.birthday_tracker_alice_smith`) showing the number of days until their next birthday, with attributes for age, date, and notes.
 
 ### Listing Birthdays
 
@@ -132,7 +136,7 @@ The `birthday_tracker_reminder` event includes:
 | Field | Type | Example | Description |
 |-------|------|---------|-------------|
 | `name` | string | `"Alice Smith"` | Person's name |
-| `date` | string | `"1990-03-15"` | Stored birthday date |
+| `date` | string | `"15-03-1990"` | Birthday date (DD-MM-YYYY) |
 | `days_until` | int | `7` | Days until next birthday |
 | `age_turning` | int/null | `40` | Age they're turning (null if no birth year) |
 | `age_turning_ordinal` | string/null | `"40th"` | Ordinal age string (null if no birth year) |

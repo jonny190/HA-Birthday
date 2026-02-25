@@ -2,7 +2,7 @@
 from typing import Final
 
 DOMAIN: Final = "birthday_tracker"
-PLATFORMS: Final = ["calendar"]
+PLATFORMS: Final = ["calendar", "sensor"]
 
 # Storage
 STORAGE_KEY: Final = f"{DOMAIN}.birthdays"

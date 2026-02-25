@@ -26,7 +26,7 @@
         "description": "Add a new birthday to track.",
         "data": {
           "name": "Name",
-          "date": "Date (YYYY-MM-DD or MM-DD)",
+          "date": "Date (DD-MM-YYYY or DD-MM)",
           "reminder_days_before": "Reminder days before (comma-separated, e.g. 7,1,0)",
           "notes": "Notes (optional)"
         }
@@ -51,7 +51,7 @@
         "description": "Update the birthday details.",
         "data": {
           "name": "Name",
-          "date": "Date (YYYY-MM-DD or MM-DD)",
+          "date": "Date (DD-MM-YYYY or DD-MM)",
           "reminder_days_before": "Reminder days before (comma-separated)",
           "notes": "Notes"
         }
@@ -72,7 +72,7 @@
     "error": {
       "invalid_time": "Invalid time format. Use HH:MM (e.g. 12:00).",
       "invalid_days": "Invalid format. Use comma-separated positive numbers (e.g. 7,1,0).",
-      "invalid_date": "Invalid date format. Use YYYY-MM-DD or MM-DD."
+      "invalid_date": "Invalid date format. Use DD-MM-YYYY or DD-MM."
     },
     "abort": {
       "no_birthdays": "No birthdays have been added yet. Use 'Add a birthday' first.",
@@ -90,7 +90,7 @@
         },
         "date": {
           "name": "Date",
-          "description": "Birthday date in YYYY-MM-DD format (or MM-DD if birth year is unknown)."
+          "description": "Birthday date in DD-MM-YYYY format (or DD-MM if birth year is unknown)."
         },
         "reminder_days_before": {
           "name": "Reminder Days Before",
@@ -126,7 +126,7 @@
         },
         "date": {
           "name": "Date",
-          "description": "Updated birthday date (YYYY-MM-DD or MM-DD)."
+          "description": "Updated birthday date (DD-MM-YYYY or DD-MM)."
         },
         "reminder_days_before": {
           "name": "Reminder Days Before",
