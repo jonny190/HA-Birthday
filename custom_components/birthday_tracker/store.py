@@ -1,4 +1,4 @@
-"""Persistent storage manager for birthday data."""
+"""Persistent storage manager for birthday, memorial, wedding and personal entries."""
 from __future__ import annotations
 
 import uuid
@@ -13,14 +13,22 @@ from .const import (
     ATTR_NAME,
     ATTR_NOTES,
     ATTR_REMINDER_DAYS,
+    ATTR_TYPE,
     DEFAULT_REMINDER_DAYS,
+    DEFAULT_TYPE,
     STORAGE_KEY,
     STORAGE_VERSION,
 )
 
 
 class BirthdayStore:
-    """Manage birthday data persistence."""
+    """Manage entry persistence.
+
+    Storage stays at version 1 and the list key stays ``birthdays``. The only change is an
+    extra ``type`` key on each entry, which older code ignores, so rolling back to the
+    previous release still reads the file. Entries written before types existed are
+    backfilled as birthdays on load rather than through a migration step.
+    """
 
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize the store."""
@@ -28,20 +36,26 @@ class BirthdayStore:
         self._birthdays: list[dict[str, Any]] = []
 
     async def async_load(self) -> None:
-        """Load birthdays from disk."""
+        """Load entries from disk, backfilling a missing type."""
         data = await self._store.async_load()
-        if data and "birthdays" in data:
-            self._birthdays = data["birthdays"]
-        else:
-            self._birthdays = []
+        entries = data.get("birthdays") if data else None
+        self._birthdays = entries if entries is not None else []
+
+        backfilled = False
+        for entry in self._birthdays:
+            if not entry.get(ATTR_TYPE):
+                entry[ATTR_TYPE] = DEFAULT_TYPE
+                backfilled = True
+        if backfilled:
+            await self._async_save()
 
     async def _async_save(self) -> None:
-        """Save birthdays to disk."""
+        """Save entries to disk."""
         await self._store.async_save({"birthdays": self._birthdays})
 
     @property
     def birthdays(self) -> list[dict[str, Any]]:
-        """Return all birthdays."""
+        """Return all entries."""
         return list(self._birthdays)
 
     async def async_add(
@@ -50,23 +64,25 @@ class BirthdayStore:
         date_str: str,
         reminder_days_before: list[int] | None = None,
         notes: str = "",
+        entry_type: str | None = None,
     ) -> dict[str, Any]:
-        """Add a birthday. Returns the new birthday dict."""
-        birthday: dict[str, Any] = {
+        """Add an entry. Returns the new entry dict."""
+        entry: dict[str, Any] = {
             ATTR_BIRTHDAY_ID: uuid.uuid4().hex[:8],
             ATTR_NAME: name,
             ATTR_DATE: date_str,
             ATTR_REMINDER_DAYS: reminder_days_before if reminder_days_before is not None else list(DEFAULT_REMINDER_DAYS),
             ATTR_NOTES: notes,
+            ATTR_TYPE: entry_type or DEFAULT_TYPE,
         }
-        self._birthdays.append(birthday)
+        self._birthdays.append(entry)
         await self._async_save()
-        return birthday
+        return entry
 
     async def async_remove(self, birthday_id: str) -> bool:
-        """Remove a birthday by ID. Returns True if found and removed."""
-        for i, b in enumerate(self._birthdays):
-            if b[ATTR_BIRTHDAY_ID] == birthday_id:
+        """Remove an entry by ID. Returns True if found and removed."""
+        for i, entry in enumerate(self._birthdays):
+            if entry[ATTR_BIRTHDAY_ID] == birthday_id:
                 self._birthdays.pop(i)
                 await self._async_save()
                 return True
@@ -75,19 +91,19 @@ class BirthdayStore:
     async def async_edit(
         self, birthday_id: str, **kwargs: Any
     ) -> dict[str, Any] | None:
-        """Edit a birthday. Returns updated dict or None if not found."""
-        for birthday in self._birthdays:
-            if birthday[ATTR_BIRTHDAY_ID] == birthday_id:
-                for key in (ATTR_NAME, ATTR_DATE, ATTR_REMINDER_DAYS, ATTR_NOTES):
-                    if key in kwargs:
-                        birthday[key] = kwargs[key]
+        """Edit an entry. Returns the updated dict, or None if not found."""
+        for entry in self._birthdays:
+            if entry[ATTR_BIRTHDAY_ID] == birthday_id:
+                for key in (ATTR_NAME, ATTR_DATE, ATTR_REMINDER_DAYS, ATTR_NOTES, ATTR_TYPE):
+                    if key in kwargs and kwargs[key] is not None:
+                        entry[key] = kwargs[key]
                 await self._async_save()
-                return dict(birthday)
+                return dict(entry)
         return None
 
     def get_by_id(self, birthday_id: str) -> dict[str, Any] | None:
-        """Get a birthday by ID."""
-        for birthday in self._birthdays:
-            if birthday[ATTR_BIRTHDAY_ID] == birthday_id:
-                return dict(birthday)
+        """Get an entry by ID."""
+        for entry in self._birthdays:
+            if entry[ATTR_BIRTHDAY_ID] == birthday_id:
+                return dict(entry)
         return None
