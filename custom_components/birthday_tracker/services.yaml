@@ -10,6 +10,16 @@ add_birthday:
       example: "1990-03-15"
       selector:
         text:
+    type:
+      required: false
+      example: "birthday"
+      selector:
+        select:
+          options:
+            - birthday
+            - memorial
+            - wedding
+            - personal
     reminder_days_before:
       required: false
       example: "7,1,0"
@@ -46,6 +56,16 @@ edit_birthday:
       example: "1990-04-20"
       selector:
         text:
+    type:
+      required: false
+      example: "memorial"
+      selector:
+        select:
+          options:
+            - birthday
+            - memorial
+            - wedding
+            - personal
     reminder_days_before:
       required: false
       example: "7,1,0"

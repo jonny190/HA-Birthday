@@ -38,3 +38,26 @@ ATTR_NOTES: Final = "notes"
 ATTR_DAYS_UNTIL: Final = "days_until"
 ATTR_AGE_TURNING: Final = "age_turning"
 ATTR_AGE_TURNING_ORDINAL: Final = "age_turning_ordinal"
+
+# --- Entry types -------------------------------------------------------------------
+# Every entry carries a type. Entries that predate the field are read as birthdays, so
+# existing data needs no migration and old code tolerates the extra key.
+ATTR_TYPE: Final = "type"
+TYPE_BIRTHDAY: Final = "birthday"
+TYPE_MEMORIAL: Final = "memorial"
+TYPE_WEDDING: Final = "wedding"
+TYPE_PERSONAL: Final = "personal"
+ENTRY_TYPES: Final = (TYPE_BIRTHDAY, TYPE_MEMORIAL, TYPE_WEDDING, TYPE_PERSONAL)
+DEFAULT_TYPE: Final = TYPE_BIRTHDAY
+
+# Icon per type, so a memorial does not wear a birthday cake.
+TYPE_ICONS: Final = {
+    TYPE_BIRTHDAY: "mdi:cake-variant",
+    TYPE_MEMORIAL: "mdi:flower",
+    TYPE_WEDDING: "mdi:ring",
+    TYPE_PERSONAL: "mdi:calendar-star",
+}
+
+# Years counting: a birthday's age, a wedding's years married, or years since a passing.
+ATTR_YEARS: Final = "years"
+ATTR_YEARS_ORDINAL: Final = "years_ordinal"
